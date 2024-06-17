@@ -2,6 +2,7 @@ package com.lucidity.bestRoute.strategies;
 
 import com.lucidity.bestRoute.dto.ResponseStatus;
 import com.lucidity.bestRoute.dto.ShortestRouteResponseDto;
+import com.lucidity.bestRoute.exceptions.RestaurantNotFindException;
 import com.lucidity.bestRoute.models.*;
 import com.lucidity.bestRoute.repositories.CustomerRepository;
 import com.lucidity.bestRoute.repositories.RestaurantRepository;
@@ -9,10 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.PriorityQueue;
+import java.util.*;
 
 @Component
 @Primary
@@ -31,7 +29,7 @@ public class MSTBestRouteCalculatorStrategy implements BestRouteCalculatorStrate
     }
 
     @Override
-    public ShortestRouteResponseDto getBestRoute(GeoLocation start, List<Order> orders) {
+    public ShortestRouteResponseDto getBestRoute(GeoLocation start, List<Order> orders) throws RestaurantNotFindException {
 
         // create required maps for Minimum spanning tree Algo
         Map<Long, Boolean> restaurantVisited = new HashMap<>();
@@ -55,15 +53,18 @@ public class MSTBestRouteCalculatorStrategy implements BestRouteCalculatorStrate
 
         // store all the restaurants in the priority queue
         for(Long restaurantId : restaurantVisited.keySet()){
-            Restaurant restaurant = restaurantRepository.findById(restaurantId).get();
-            queue.add(new Node(restaurantId, calculateTime(start, restaurant.getGeoLocation())));
+            Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(restaurantId);
+
+            if(optionalRestaurant.isEmpty()){
+                throw new RestaurantNotFindException();
+            }
+
+            queue.add(new Node(restaurantId, calculateTime(start, optionalRestaurant.get().getGeoLocation())));
         }
 
         // loop till queue is empty
         while(queue.size()>0){
             double distance = queue.peek().getTime();
-            System.out.println("distance "+distance);
-            System.out.println("time "+deliveryTime);
             long id = queue.peek().getId();
             GeoLocation current = null;
             queue.remove();
@@ -97,7 +98,6 @@ public class MSTBestRouteCalculatorStrategy implements BestRouteCalculatorStrate
                 if(!restaurantVisited.get(restaurantId)){
                     GeoLocation temp = restaurantRepository.findById(restaurantId).get().getGeoLocation();
                     queue.add(new Node(restaurantId, calculateTime(current, temp)));
-                    System.out.println("id "+id + " restaurantId " + restaurantId + " distance "+calculateTime(current, temp));
                 }
             }
 
@@ -105,7 +105,6 @@ public class MSTBestRouteCalculatorStrategy implements BestRouteCalculatorStrate
                 if(!customerVisited.get(customerId) && restaurantVisited.get(customerRestaurantMap.get(customerId))){
                     GeoLocation temp = customerRepository.findById(customerId).get().getGeoLocation();
                     queue.add(new Node(customerId, calculateTime(current, temp)));
-                    System.out.println("id "+id + " customerId " + customerId+ " distance "+ calculateTime(current, temp));
                 }
             }
         }

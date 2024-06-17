@@ -21,10 +21,10 @@ Defines the data entities.
 ## Approach
 
 ### 1. Distance Calculation
-Implemented a `DistanceCalculator` strategy interface with a `HaversineCalculator` class that uses the Haversine formula to calculate distances between geographical points.
+Implemented a `DistanceCalculator` strategy interface that uses the Haversine formula to calculate distances between geographical points.
 
 ### 2. Shortest Path Calculation Using MST
-To determine the shortest delivery route, the algorithm constructs a Minimum Spanning Tree (MST) of the locations (delivery executive, restaurants, and customers).
+Implemented a `BestRouteCalculator` strategy interface To determine the shortest delivery route, the algorithm constructs a Minimum Spanning Tree (MST) of the locations (delivery executive, restaurants, and customers).
 
 ### 3. MVC Architecture
 
@@ -81,7 +81,7 @@ curl --location 'http://localhost:8080/api/delivery/shortest-route' \
 ```
 
 Here : 
-- time -> best Route time
+- time -> best Route time in minutes
 - bestRoute -> best Route Path
 - responseStatus -> status
 

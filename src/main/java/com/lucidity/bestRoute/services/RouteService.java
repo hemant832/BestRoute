@@ -2,6 +2,7 @@ package com.lucidity.bestRoute.services;
 
 import com.lucidity.bestRoute.dto.ResponseStatus;
 import com.lucidity.bestRoute.dto.ShortestRouteResponseDto;
+import com.lucidity.bestRoute.exceptions.RestaurantNotFindException;
 import com.lucidity.bestRoute.models.*;
 import com.lucidity.bestRoute.repositories.CustomerRepository;
 import com.lucidity.bestRoute.repositories.DeliveryExecutiveRepository;
@@ -27,7 +28,7 @@ public class RouteService {
         this.bestRouteCalculatorStrategy = bestRouteCalculatorStrategy;
     }
 
-    public ShortestRouteResponseDto findShortestDeliveryTime(long deliveryExecutiveId, List<Long> orderIds) {
+    public ShortestRouteResponseDto findShortestDeliveryTime(long deliveryExecutiveId, List<Long> orderIds) throws RestaurantNotFindException {
 
         Optional<DeliveryExecutive> deliveryExecutiveOptional = deliveryExecutiveRepository.findById(deliveryExecutiveId);
         DeliveryExecutive deliveryExecutive = deliveryExecutiveOptional.get();
