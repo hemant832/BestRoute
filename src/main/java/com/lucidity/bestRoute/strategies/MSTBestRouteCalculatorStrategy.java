@@ -59,7 +59,11 @@ public class MSTBestRouteCalculatorStrategy implements BestRouteCalculatorStrate
                 throw new RestaurantNotFindException();
             }
 
-            queue.add(new Node(restaurantId, calculateTime(start, optionalRestaurant.get().getGeoLocation())));
+            Restaurant restaurant = optionalRestaurant.get();
+
+            double time = calculateTime(start, restaurant.getGeoLocation());
+
+            queue.add(new Node(restaurantId, time + Math.max(restaurant.getPreparationTime()-time, 0)));
         }
 
         // loop till queue is empty
@@ -96,8 +100,14 @@ public class MSTBestRouteCalculatorStrategy implements BestRouteCalculatorStrate
 
             for(long restaurantId : restaurantVisited.keySet()){
                 if(!restaurantVisited.get(restaurantId)){
-                    GeoLocation temp = restaurantRepository.findById(restaurantId).get().getGeoLocation();
-                    queue.add(new Node(restaurantId, calculateTime(current, temp)));
+                    Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(restaurantId);
+                    if(optionalRestaurant.isEmpty()){
+                        throw new RestaurantNotFindException();
+                    }
+                    Restaurant restaurant = optionalRestaurant.get();
+                    GeoLocation temp = restaurant.getGeoLocation();
+                    double time = calculateTime(current, temp);
+                    queue.add(new Node(restaurantId, time + Math.max(restaurant.getPreparationTime()-deliveryTime-time,0)));
                 }
             }
 
