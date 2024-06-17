@@ -2,11 +2,11 @@ package com.lucidity.bestRoute.models;
 
 public class Node {
     private long id;
-    private double distance;
+    private double time;
 
-    public Node(long id, double distance) {
+    public Node(long id, double time) {
         this.id = id;
-        this.distance = distance;
+        this.time = time;
     }
 
     public long getId() {
@@ -17,11 +17,11 @@ public class Node {
         this.id = id;
     }
 
-    public double getDistance() {
-        return distance;
+    public double getTime() {
+        return time;
     }
 
-    public void setDistance(double distance) {
-        this.distance = distance;
+    public void setTime(double time) {
+        this.time = time;
     }
 }
