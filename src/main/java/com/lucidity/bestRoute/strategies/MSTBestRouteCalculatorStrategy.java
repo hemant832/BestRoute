@@ -2,7 +2,7 @@ package com.lucidity.bestRoute.strategies;
 
 import com.lucidity.bestRoute.dto.ResponseStatus;
 import com.lucidity.bestRoute.dto.ShortestRouteResponseDto;
-import com.lucidity.bestRoute.exceptions.RestaurantNotFindException;
+import com.lucidity.bestRoute.exceptions.RestaurantNotFoundException;
 import com.lucidity.bestRoute.models.*;
 import com.lucidity.bestRoute.repositories.CustomerRepository;
 import com.lucidity.bestRoute.repositories.RestaurantRepository;
@@ -29,7 +29,7 @@ public class MSTBestRouteCalculatorStrategy implements BestRouteCalculatorStrate
     }
 
     @Override
-    public ShortestRouteResponseDto getBestRoute(GeoLocation start, List<Order> orders) throws RestaurantNotFindException {
+    public ShortestRouteResponseDto getBestRoute(GeoLocation start, List<Order> orders) throws RestaurantNotFoundException {
 
         // create required maps for Minimum spanning tree Algo
         Map<Long, Boolean> restaurantVisited = new HashMap<>();
@@ -56,7 +56,7 @@ public class MSTBestRouteCalculatorStrategy implements BestRouteCalculatorStrate
             Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(restaurantId);
 
             if(optionalRestaurant.isEmpty()){
-                throw new RestaurantNotFindException();
+                throw new RestaurantNotFoundException();
             }
 
             Restaurant restaurant = optionalRestaurant.get();
@@ -102,7 +102,7 @@ public class MSTBestRouteCalculatorStrategy implements BestRouteCalculatorStrate
                 if(!restaurantVisited.get(restaurantId)){
                     Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(restaurantId);
                     if(optionalRestaurant.isEmpty()){
-                        throw new RestaurantNotFindException();
+                        throw new RestaurantNotFoundException();
                     }
                     Restaurant restaurant = optionalRestaurant.get();
                     GeoLocation temp = restaurant.getGeoLocation();
