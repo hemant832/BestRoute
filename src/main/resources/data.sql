@@ -1,6 +1,7 @@
 INSERT INTO restaurant (id, name, latitude, longitude, preparation_time) VALUES (1, 'R1', 12.9372, 77.6185, 20);
 INSERT INTO restaurant (id, name, latitude, longitude, preparation_time) VALUES (2, 'R2', 12.9344, 77.6252, 15);
 
+
 INSERT INTO customer (id, name, latitude, longitude) VALUES (11, 'C1', 12.9351, 77.6245);
 INSERT INTO customer ( id, name, latitude, longitude) VALUES (22, 'C2', 12.9367, 77.6200);
 

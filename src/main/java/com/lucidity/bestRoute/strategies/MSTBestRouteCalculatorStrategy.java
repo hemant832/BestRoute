@@ -45,13 +45,13 @@ public class MSTBestRouteCalculatorStrategy implements BestRouteCalculatorStrate
         }
 
         // start delivery
-        int deliveryTime = 0;
+        double deliveryTime = 0;
 
         StringBuilder path = new StringBuilder("");
 
         ShortestRouteResponseDto response = new ShortestRouteResponseDto();
 
-        PriorityQueue<Node> queue = new PriorityQueue<>((node1, node2) -> (int) (node1.getTime() - node2.getTime()));
+        PriorityQueue<Node> queue = new PriorityQueue<>((node1, node2) -> Double.compare(node1.getTime(), node2.getTime()));
 
         // store all the restaurants in the priority queue
         for(Long restaurantId : restaurantVisited.keySet()){
@@ -62,6 +62,8 @@ public class MSTBestRouteCalculatorStrategy implements BestRouteCalculatorStrate
         // loop till queue is empty
         while(queue.size()>0){
             double distance = queue.peek().getTime();
+            System.out.println("distance "+distance);
+            System.out.println("time "+deliveryTime);
             long id = queue.peek().getId();
             GeoLocation current = null;
             queue.remove();
@@ -95,6 +97,7 @@ public class MSTBestRouteCalculatorStrategy implements BestRouteCalculatorStrate
                 if(!restaurantVisited.get(restaurantId)){
                     GeoLocation temp = restaurantRepository.findById(restaurantId).get().getGeoLocation();
                     queue.add(new Node(restaurantId, calculateTime(current, temp)));
+                    System.out.println("id "+id + " restaurantId " + restaurantId + " distance "+calculateTime(current, temp));
                 }
             }
 
@@ -102,6 +105,7 @@ public class MSTBestRouteCalculatorStrategy implements BestRouteCalculatorStrate
                 if(!customerVisited.get(customerId) && restaurantVisited.get(customerRestaurantMap.get(customerId))){
                     GeoLocation temp = customerRepository.findById(customerId).get().getGeoLocation();
                     queue.add(new Node(customerId, calculateTime(current, temp)));
+                    System.out.println("id "+id + " customerId " + customerId+ " distance "+ calculateTime(current, temp));
                 }
             }
         }
