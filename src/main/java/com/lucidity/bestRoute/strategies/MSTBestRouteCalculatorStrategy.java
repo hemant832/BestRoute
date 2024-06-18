@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-@Component
+@Component("mst")
 @Primary
 public class MSTBestRouteCalculatorStrategy implements BestRouteCalculatorStrategy{
     private final RestaurantRepository restaurantRepository;
@@ -121,7 +121,7 @@ public class MSTBestRouteCalculatorStrategy implements BestRouteCalculatorStrate
 
         response.setResponseStatus(ResponseStatus.SUCCESS);
         response.setTime(deliveryTime);
-        response.setBestRoute(path.substring(0, path.length()-1));
+//        response.setBestRoute(path.substring(0, path.length()-1));
 
         return response;
     }

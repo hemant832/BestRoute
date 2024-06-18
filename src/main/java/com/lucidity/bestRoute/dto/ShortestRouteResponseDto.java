@@ -7,6 +7,5 @@ import lombok.Setter;
 @Setter
 public class ShortestRouteResponseDto {
     private double time;
-    private String bestRoute;
     private ResponseStatus responseStatus;
 }

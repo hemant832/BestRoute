@@ -6,6 +6,7 @@ import com.lucidity.bestRoute.models.*;
 import com.lucidity.bestRoute.repositories.DeliveryExecutiveRepository;
 import com.lucidity.bestRoute.repositories.OrderRepository;
 import com.lucidity.bestRoute.strategies.BestRouteCalculatorStrategy;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -17,7 +18,7 @@ public class RouteService {
     private final DeliveryExecutiveRepository deliveryExecutiveRepository;
     private final BestRouteCalculatorStrategy bestRouteCalculatorStrategy;
 
-    public RouteService(OrderRepository orderRepository, DeliveryExecutiveRepository deliveryExecutiveRepository, BestRouteCalculatorStrategy bestRouteCalculatorStrategy) {
+    public RouteService(OrderRepository orderRepository, DeliveryExecutiveRepository deliveryExecutiveRepository, @Qualifier("tsp") BestRouteCalculatorStrategy bestRouteCalculatorStrategy) {
         this.orderRepository = orderRepository;
         this.deliveryExecutiveRepository = deliveryExecutiveRepository;
         this.bestRouteCalculatorStrategy = bestRouteCalculatorStrategy;
